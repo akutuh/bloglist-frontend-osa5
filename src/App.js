@@ -76,7 +76,7 @@ const App = () => {
   )
   
   const addBlog = async (blogObject) => {
-    
+
       try {
         const returnedBlog = await blogService.create(blogObject)
         setBlogs(blogs.concat(returnedBlog))
@@ -97,6 +97,27 @@ const App = () => {
     window.location.reload(false);
   }
 
+  const likeBlog = async (blogObject) => {
+    try {
+      const returnedBlog = await blogService.like(blogObject)
+      setBlogs(current =>
+        current.map(obj => {
+          if (obj.id === returnedBlog.id) {
+            return {...obj, likes: returnedBlog.likes}
+          }
+          return obj;
+        })
+      )
+
+    
+    } catch (exception) {
+      setErrorMessage('creation failed (like)')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+    }
+  }
+
   const blogFormRef = useRef()
 
   return (
@@ -115,7 +136,7 @@ const App = () => {
             <BlogForm createBlog={addBlog}/>
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} createBlog={likeBlog}/>
           )}
         </div>
       }
