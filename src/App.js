@@ -14,10 +14,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -79,19 +75,12 @@ const App = () => {
     </form>
   )
   
-  const addBlog = async (event) => {
-      event.preventDefault()
-
-      const blogObject = {
-        title: title,
-        author: author,
-        url: url
-      }
-      
+  const addBlog = async (blogObject) => {
+    
       try {
         const returnedBlog = await blogService.create(blogObject)
         setBlogs(blogs.concat(returnedBlog))
-        setErrorMessage(`a new blog ${title} by ${author} added`)
+        setErrorMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
         blogFormRef.current.toggleVisibility()
         setTimeout(() => {
           setErrorMessage(null)
@@ -102,9 +91,6 @@ const App = () => {
           setErrorMessage(null)
         }, 5000)
       }
-      setTitle('')
-      setAuthor('')
-      setUrl('')
   } 
   const handleLogout = (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
@@ -126,15 +112,7 @@ const App = () => {
           <Notification message={errorMessage}/>
           <p>{user.name} logged in <button onClick={handleLogout}> logout</button></p>
           <Togglable buttonLabel='create new blog' ref={blogFormRef}>
-            <BlogForm
-              title={title}
-              author={author}
-              url={url} 
-              handleTitleChange={({ target }) => setTitle(target.value)}
-              handleAuthorChange={({ target }) => setAuthor(target.value)}
-              handleUrlChange={({ target }) => setUrl(target.value)}
-              handleSubmit={addBlog}
-            />
+            <BlogForm createBlog={addBlog}/>
           </Togglable>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
