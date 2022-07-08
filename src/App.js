@@ -16,8 +16,9 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+      setBlogs( blogs.sort((a, b) => b.likes - a.likes ))
+    )
+      
   }, [])
 
   useEffect(() => {
@@ -100,16 +101,12 @@ const App = () => {
   const likeBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.like(blogObject)
-      setBlogs(current =>
-        current.map(obj => {
-          if (obj.id === returnedBlog.id) {
-            return {...obj, likes: returnedBlog.likes}
-          }
-          return obj;
-        })
-      )
+      let  blogsCopy = [...blogs]
+      let obj = blogsCopy.find(b => b.id === returnedBlog.id)
+      obj.likes = returnedBlog.likes
+      setBlogs(blogsCopy.sort((a, b) => b.likes - a.likes))
 
-    
+      
     } catch (exception) {
       setErrorMessage('creation failed (like)')
         setTimeout(() => {
