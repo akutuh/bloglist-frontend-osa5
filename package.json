@@ -18,7 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:ui": "npm run build && cp -r ./build ../fullstackmooc-osa5"
+    "build:ui": "npm run build && cp -r ./build ../fullstackmooc-osa5",
+    "eslint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
@@ -38,5 +39,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3003"
+  "proxy": "http://localhost:3003",
+  "devDependencies": {
+    "eslint-plugin-jest": "^26.5.3"
+  }
 }

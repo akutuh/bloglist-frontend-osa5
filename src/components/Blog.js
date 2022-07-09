@@ -19,7 +19,6 @@ const Blog = ({ blog, createBlog, removeBlog, user  }) => {
   const toggleRemoveVisibility = () => {
     setRemoveVisible(!removeVisible)
   }
-  
 
   const likeBlog = (event) => {
     event.preventDefault()
@@ -32,10 +31,9 @@ const Blog = ({ blog, createBlog, removeBlog, user  }) => {
       id: blog.id
     })
   }
-  
+
   const deleteBlog = (event) => {
     event.preventDefault()
-    
     removeBlog({
       user: blog.user.username,
       likes: blog.likes,
@@ -58,7 +56,7 @@ const Blog = ({ blog, createBlog, removeBlog, user  }) => {
       <div style={hideWhenVisible}>
         <div style={blogStyle}>
           {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
-        </div>  
+        </div>
       </div>
       <div style={showWhenVisible}>
         <div style={blogStyle}>
@@ -69,7 +67,7 @@ const Blog = ({ blog, createBlog, removeBlog, user  }) => {
           <div style={hideIfNotAddedByLoggedUser}>
             <button onClick={deleteBlog}>remove</button>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
   )
