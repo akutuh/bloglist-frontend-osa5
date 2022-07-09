@@ -77,9 +77,11 @@ const App = () => {
   )
   
   const addBlog = async (blogObject) => {
-
       try {
         const returnedBlog = await blogService.create(blogObject)
+        let returnedBloguserid = returnedBlog.user
+        returnedBlog.user = {username: user.username, id: returnedBloguserid}
+        console.log(returnedBlog)
         setBlogs(blogs.concat(returnedBlog))
         setErrorMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
         blogFormRef.current.toggleVisibility()
@@ -104,11 +106,28 @@ const App = () => {
       let  blogsCopy = [...blogs]
       let obj = blogsCopy.find(b => b.id === returnedBlog.id)
       obj.likes = returnedBlog.likes
-      setBlogs(blogsCopy.sort((a, b) => b.likes - a.likes))
-
-      
+      setBlogs(blogsCopy.sort((a, b) => b.likes - a.likes))      
     } catch (exception) {
       setErrorMessage('creation failed (like)')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+    }
+  }
+
+  const deleteBlog = async (blogObject) => {
+    try {
+      if (window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}?`)) {
+        await blogService.remove(blogObject)
+        let  blogsCopy = [...blogs]
+        setBlogs(blogsCopy.filter(b => b.id !== blogObject.id)) 
+        setErrorMessage(`blog ${blogObject.title} by ${blogObject.author} was removed`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+    } catch (exception) {
+      setErrorMessage(exception.response.data.error)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
@@ -133,7 +152,7 @@ const App = () => {
             <BlogForm createBlog={addBlog}/>
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} createBlog={likeBlog}/>
+            <Blog key={blog.id} user={user} blog={blog} createBlog={likeBlog} removeBlog={deleteBlog}  />
           )}
         </div>
       }

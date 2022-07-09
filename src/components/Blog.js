@@ -1,13 +1,25 @@
 import { useState } from 'react'
-const Blog = ({ blog, createBlog }) => {
+const Blog = ({ blog, createBlog, removeBlog, user  }) => {
   const [visible, setVisible] = useState(false)
+  const [removeVisible, setRemoveVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
+  const hideIfNotAddedByLoggedUser = { display: removeVisible ? '' : 'none' }
+
+
   const toggleVisibility = () => {
     setVisible(!visible)
+    if (blog.user.username === user.username) {
+      toggleRemoveVisibility()
+    }
   }
+
+  const toggleRemoveVisibility = () => {
+    setRemoveVisible(!removeVisible)
+  }
+  
 
   const likeBlog = (event) => {
     event.preventDefault()
@@ -19,7 +31,20 @@ const Blog = ({ blog, createBlog }) => {
       url: blog.url,
       id: blog.id
     })
-} 
+  }
+  
+  const deleteBlog = (event) => {
+    event.preventDefault()
+    
+    removeBlog({
+      user: blog.user.username,
+      likes: blog.likes,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+      id: blog.id,
+    })
+  }
 
   const blogStyle = {
     paddingTop: 8,
@@ -39,10 +64,11 @@ const Blog = ({ blog, createBlog }) => {
         <div style={blogStyle}>
           {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
           <br></br>{blog.url}
-          <div>
-          {blog.likes} <button onClick={likeBlog}>like</button>
-          </div>
+          <br></br>{blog.likes} <button onClick={likeBlog}>like</button>
           <br></br>{blog.user.username}
+          <div style={hideIfNotAddedByLoggedUser}>
+            <button onClick={deleteBlog}>remove</button>
+          </div>
         </div>  
       </div>
     </div>

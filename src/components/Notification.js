@@ -1,7 +1,7 @@
 const Notification = ({ message }) => {
   if (message === null) {
     return null
-  } else if (message.includes('wrong credentials') || message.includes('creation failed')) {
+  } else if (message.includes('wrong credentials') || message.includes('creation failed') || message.includes('allowed')) {
     const errorStyle = {
       color: 'red',
       background: 'lightgrey',

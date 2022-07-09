@@ -27,4 +27,13 @@ const like = async newObject => {
   return response.data
 }
 
-export default { getAll, setToken, create, like }
+const remove = async newObject => {
+  const idUrl = baseUrl + `/${newObject.id}`
+  const config = {
+    headers: { Authorization: token},
+  }
+  const response = await axios.delete(idUrl, config)
+  return response.data
+}
+
+export default { getAll, setToken, create, like, remove }
