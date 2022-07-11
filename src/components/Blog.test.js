@@ -1,6 +1,7 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 describe('blog tests', () => {
@@ -14,7 +15,7 @@ describe('blog tests', () => {
       user: 'keke'
     }
 
-    const { container } = render(<Blog blog={blog}/>)
+    const { container } = render(<Blog blog={blog}  />)
 
     const div = container.querySelector('.blog')
     expect(div).toHaveTextContent(
@@ -27,6 +28,34 @@ describe('blog tests', () => {
       'testurl'
     )
     expect(div).not.toHaveTextContent(
+      '5'
+    )
+  })
+  test('url and likes show after pressing button', async () => {
+    const blog = {
+      title: 'testtitle',
+      author: 'testauthor',
+      url: 'testurl',
+      likes: 5,
+      user: { username: 'asd' }
+    }
+    const user = {
+      username: 'asd'
+    }
+
+    const { container } = render(<Blog blog={blog}  user={user} />)
+
+    const userr = userEvent.setup()
+    const button = screen.getByText('view')
+    await userr.click(button)
+
+    const div = container.querySelector('.blogAll')
+    expect(div).not.toHaveStyle('display: none')
+
+    expect(div).toHaveTextContent(
+      'testurl'
+    )
+    expect(div).toHaveTextContent(
       '5'
     )
   })
