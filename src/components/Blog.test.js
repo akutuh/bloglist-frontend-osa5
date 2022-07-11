@@ -59,4 +59,29 @@ describe('blog tests', () => {
       '5'
     )
   })
+  test.only('pressing like twice (2)', async () => {
+    const blog = {
+      title: 'testtitle',
+      author: 'testauthor',
+      url: 'testurl',
+      likes: 5,
+      user: { username: 'asd' }
+    }
+    const user = {
+      username: 'asd'
+    }
+
+    const mockHandler = jest.fn()
+
+    render(
+      <Blog blog={blog} user={user} likeBlog={mockHandler} createBlog={mockHandler} />
+    )
+
+    const userr = userEvent.setup()
+    const button = screen.getByText('like')
+    await userr.click(button)
+    await userr.click(button)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
+  })
 })
