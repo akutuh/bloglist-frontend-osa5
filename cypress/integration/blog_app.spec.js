@@ -60,11 +60,31 @@ describe('Blog app', function() {
             url: 'testurl'
           })
         })
-        it.only('can like a blog', function() {
+        it('can like a blog', function() {
           cy.contains('testtitle')
             .contains('view')
             .click()
           cy.contains('like').click()
+        })
+        it('can remove blog', function() {
+          cy.contains('testtitle')
+            .contains('view')
+            .click()
+          cy.contains('remove').click()
+        })
+        it.only('only creator can remove', function() {
+          cy.contains('logout').click()
+          const user = {
+            name: 'Test Testinen',
+            username: 'testihenkilo',
+            password: 'sala'
+          }
+          cy.request('POST', 'http://localhost:3003/api/users', user)
+          cy.login({ username: 'testihenkilo', password: 'sala' })
+          cy.contains('testtitle')
+            .contains('view')
+            .click()
+          cy.contains('remove').should('not.be.visible')
         })
       })
     })
