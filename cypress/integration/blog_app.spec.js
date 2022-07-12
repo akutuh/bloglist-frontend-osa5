@@ -72,7 +72,7 @@ describe('Blog app', function() {
             .click()
           cy.contains('remove').click()
         })
-        it.only('only creator can remove', function() {
+        it('only creator can remove', function() {
           cy.contains('logout').click()
           const user = {
             name: 'Test Testinen',
@@ -85,6 +85,31 @@ describe('Blog app', function() {
             .contains('view')
             .click()
           cy.contains('remove').should('not.be.visible')
+        })
+        it.only('blogs are sorted by likes', function() {
+          cy.createBlog({
+            title: 'The title with the most likes',
+            author: 'mostliked',
+            url: 'testurl'
+          })
+          cy.createBlog({
+            title: 'The title with the second most likes',
+            author: 'scndmostliked',
+            url: 'testurl'
+          })
+          cy.contains('The title with the most likes')
+            .contains('view')
+            .click()
+          cy.contains('The title with the second most likes')
+            .contains('view')
+            .click()
+          cy.get('.blog').eq(1).should('contain', 'The title with the most likes')
+          cy.get('.blog').eq(2).should('contain', 'The title with the second most likes')
+          cy.get('.blogAll').eq(1).contains('like').click()
+          cy.get('.blogAll').eq(0).contains('like').click()
+          cy.get('.blogAll').eq(2).contains('like').click()
+          cy.get('.blog').eq(0).should('contain', 'The title with the most likes')
+          cy.get('.blog').eq(1).should('contain', 'The title with the second most likes')
         })
       })
     })
